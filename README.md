@@ -14,9 +14,16 @@ ampy --port /dev/ttyUSB0 put ssd1306.py
 
 ## esp8266
 
+https://docs.micropython.org/en/latest/esp8266/tutorial/network_basics.html
+
 picocom repl:
 ```shell
 picocom /dev/ttyUSB0 -b115200
+```
+
+rshell:
+```shell
+rshell --buffer-size=30 -p /dev/ttyUSB0 -a
 ```
 
 ## Jupyter Micropython Kernel
@@ -63,6 +70,22 @@ Commands:
 ```
 
 ```shell
-ampy --port /dev/ttyUSB0 ls
+export AMPY_PORT=/dev/ttyUSB0
+ampy ls
 ```
 
+## networking
+
+https://docs.micropython.org/en/latest/esp8266/tutorial/network_basics.html
+https://tttapa.github.io/ESP8266/Chap05%20-%20Network%20Protocols.html
+
+## Possible approach
+  * esp8266mod sensors (Sl, Sr, Sc) send POST requests to central  
+
+## IR
+
+### receiver
+
+```shell
+G - Ground, R - Red, positive Voltage, Y - Signal
+```

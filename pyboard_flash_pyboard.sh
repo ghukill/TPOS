@@ -1,3 +1,4 @@
+# original micropython board
 echo "flashing pyboard"
 rshell cp ./embedded/boot.py /flash/boot.py
 rshell cp ./embedded/main.py /flash/main.py
