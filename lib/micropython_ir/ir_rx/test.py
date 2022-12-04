@@ -10,9 +10,10 @@ from sys import platform
 import time
 import gc
 from machine import Pin, freq
-from ir_rx.print_error import print_error  # Optional print of error codes
+import network
+import urequests
 
-# Import all implemented classes
+from ir_rx.print_error import print_error  # Optional print of error codes
 from ir_rx.nec import NEC_8, NEC_16, SAMSUNG
 from ir_rx.sony import SONY_12, SONY_15, SONY_20
 from ir_rx.philips import RC5_IR, RC6_M0
@@ -29,14 +30,24 @@ elif platform == "esp32" or platform == "esp32_LoBo":
 elif platform == "rp2":
     p = Pin(16, Pin.IN)
 
-# User callback
+# # User callback
+# def cb(data, addr, ctrl):
+#     if data < 0:  # NEC protocol sends repeat codes.
+#         print("Repeat code.")
+#     else:
+#         # print(f"Data 0x{data:02x} Addr 0x{addr:04x} Ctrl 0x{ctrl:02x}")
+#         print(data)
+
 def cb(data, addr, ctrl):
-    if data < 0:  # NEC protocol sends repeat codes.
+    if data < 0:
         print("Repeat code.")
     else:
-        # print(f"Data 0x{data:02x} Addr 0x{addr:04x} Ctrl 0x{ctrl:02x}")
-        print(data)
-
+        print(data, type(data), addr, type(addr), ctrl, type(ctrl))
+        wlan = network.WLAN()
+        print("wifi connected:", wlan.isconnected())
+        print("making HTTP request...")
+        response = urequests.get('http://192.168.1.123:5000/?goober=%s' % data)
+        print(response.text)
 
 def test(proto=0):
     classes = (NEC_8, NEC_16, SONY_12, SONY_15, SONY_20, RC5_IR, RC6_M0, MCE, SAMSUNG)

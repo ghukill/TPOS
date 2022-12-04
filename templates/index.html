@@ -1,0 +1,13 @@
+<html>
+  <body>
+    <h1>Door state</h1>
+    <p>The door is currently <strong>{{ 'open' if door_open else 'closed' }}</strong>.</p>
+    <form method="post">
+      <label>
+        <input type="checkbox" name="door_open" value="1" {{ 'checked' if door_open else '' }}>
+        Open
+      </label>
+      <input type="submit" value="Submit">
+    </form>
+  </body>
+</html>
