@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 import sqlite3
 import threading
 
@@ -38,7 +38,7 @@ def goober_value():
     value = cursor.fetchone()[0]
 
     # Return the goober value as a JSON response
-    return {'goober': value}
+    return jsonify({'goober': value})
 
 if __name__ == '__main__':
     app.run()
