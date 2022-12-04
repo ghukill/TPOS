@@ -46,7 +46,7 @@ def cb(data, addr, ctrl):
         wlan = network.WLAN()
         print("wifi connected:", wlan.isconnected())
         print("making HTTP request...")
-        response = urequests.get('http://192.168.1.123:5000/?goober=%s' % data)
+        response = urequests.get('http://192.168.1.133:5000/?goober=%s' % data)
         print(response.text)
 
 def test(proto=0):
