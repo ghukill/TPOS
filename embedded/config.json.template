@@ -1,0 +1,9 @@
+{
+  "tpos_api": {
+    "url_base": "http://IP"
+  },
+  "wifi": {
+    "ssid": "NETWORK",
+    "password": "PASSWORD"
+  }
+}
