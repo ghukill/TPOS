@@ -2,6 +2,7 @@
 
 import json
 from time import sleep
+import urequests
 
 from hcsr04 import HCSR04
 from wifi import wifi_connect
@@ -24,6 +25,17 @@ wifi_connect(config["wifi"]["ssid"], config["wifi"]["password"])
 # ESP8266 chip
 sensor = HCSR04(trigger_pin=12, echo_pin=14, echo_timeout_us=10000)
 while True:
+
+    # get distance
     distance = sensor.distance_cm()
     print("Distance:", distance, "cm")
-    sleep(0.5)
+
+    # send API call
+    url = "%s/?distance=%s" % (config["api"]["url_base"].rstrip("/"), distance)
+    print(url)
+    try:
+        urequests.get(url)
+    except Exception as e:
+        print("error sending API request: %s" % str(e))
+
+    sleep(2)

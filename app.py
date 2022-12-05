@@ -6,39 +6,45 @@ app = Flask(__name__)
 
 local_db = threading.local()
 
-def get_db():
-    # Check if the thread-local object has a database connection
-    if not hasattr(local_db, 'conn'):
-        # If not, create a new database connection
-        local_db.conn = sqlite3.connect('goober_value.db')
 
-    # Return the database connection from the thread-local object
+def get_db():
+    if not hasattr(local_db, "conn"):
+        local_db.conn = sqlite3.connect("db/tpos.db")
     return local_db.conn
 
-# create table if not exists
+
+# run migrations
 db = get_db()
-db.execute('CREATE TABLE IF NOT EXISTS goober_value (value TEXT)')
-db.execute('INSERT OR IGNORE INTO goober_value (value) VALUES (?)', ('',))
+db.execute(
+    """
+    CREATE TABLE IF NOT EXISTS garage (
+        distance numeric
+    );
+    """
+)
+db.execute("""INSERT OR IGNORE INTO garage (distance) VALUES (?)""", (0.0,))
 db.commit()
 
-@app.route('/', methods=['GET'])
+
+@app.route("/", methods=["GET"])
 def goober_value():
 
+    # get thread safe db
     db = get_db()
 
     # Check if the request includes a query string parameter named "goober"
-    if 'goober' in request.args:
-        # Update the goober value in the database
-        value = request.args['goober']
-        db.execute('UPDATE goober_value SET value = ?', (value,))
+    if "distance" in request.args:
+        distance = request.args["distance"]
+        db.execute("UPDATE garage SET distance = ?", (distance,))  # overwrites only row
         db.commit()
 
-    # Get the current goober value from the database
-    cursor = db.execute('SELECT value FROM goober_value')
+    # Get the current distance from the database
+    cursor = db.execute("SELECT distance FROM garage")
     value = cursor.fetchone()[0]
 
     # Return the goober value as a JSON response
-    return jsonify({'goober': value})
+    return jsonify({"distance": value})
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     app.run()

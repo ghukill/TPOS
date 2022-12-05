@@ -1,5 +1,5 @@
 {
-  "tpos_api": {
+  "api": {
     "url_base": "http://IP"
   },
   "wifi": {
