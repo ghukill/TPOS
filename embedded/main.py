@@ -18,24 +18,34 @@ except Exception as e:
 # connect to wifi
 wifi_connect(config["wifi"]["ssid"], config["wifi"]["password"])
 
-# TODO: move to module
-# setup sonar
-# ESP32 chip
-# sensor = HCSR04(trigger_pin="Y2", echo_pin="Y3", echo_timeout_us=10000)
-# ESP8266 chip
-sensor = HCSR04(trigger_pin=12, echo_pin=14, echo_timeout_us=10000)
-while True:
+# # TODO: move to module
+# # setup sonar
+# # ESP32 chip
+# # sensor = HCSR04(trigger_pin="Y2", echo_pin="Y3", echo_timeout_us=10000)
+# # ESP8266 chip
+# sensor = HCSR04(trigger_pin=12, echo_pin=14, echo_timeout_us=10000)
+# while True:
+#
+#     # get distance
+#     distance = sensor.distance_cm()
+#     print("Distance:", distance, "cm")
+#
+#     # send API call
+#     url = "%s/?distance=%s" % (config["api"]["url_base"].rstrip("/"), distance)
+#     print(url)
+#     try:
+#         urequests.get(url)
+#     except Exception as e:
+#         print("error sending API request: %s" % str(e))
+#
+#     sleep(2)
 
-    # get distance
-    distance = sensor.distance_cm()
-    print("Distance:", distance, "cm")
+from rf import RFLinkTransmitter, RFLinkReceiver
 
-    # send API call
-    url = "%s/?distance=%s" % (config["api"]["url_base"].rstrip("/"), distance)
-    print(url)
-    try:
-        urequests.get(url)
-    except Exception as e:
-        print("error sending API request: %s" % str(e))
+tx = RFLinkTransmitter(12)
+rx = RFLinkReceiver(14)
 
-    sleep(2)
+
+
+
+
