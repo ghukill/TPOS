@@ -1,4 +1,8 @@
-export AMPY_PORT=/dev/ttyUSB0
+if [ -z "$ESP8266_PORT" ]; then
+    export ESP8266_PORT="/dev/ttyUSB0" # mac /dev/tty.usbserial-0001
+fi
+
+export AMPY_PORT=$ESP8266_PORT
 
 echo "copy config.json"
 ampy --port $AMPY_PORT put embedded/config.json
