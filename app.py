@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 import sqlite3
 import threading
+import time
 
 app = Flask(__name__)
 
@@ -17,17 +18,20 @@ def get_db():
 db = get_db()
 db.execute(
     """
-    CREATE TABLE IF NOT EXISTS garage (
-        distance numeric
+    CREATE TABLE IF NOT EXISTS stairs (
+        distance numeric,
+        timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
     );
     """
 )
-db.execute("""INSERT OR IGNORE INTO garage (distance) VALUES (?)""", (0.0,))
+db.execute("""INSERT OR IGNORE INTO stairs (distance) VALUES (?)""", (-1,))
 db.commit()
 
 
-@app.route("/", methods=["GET"])
-def goober_value():
+@app.route("/stairs/distance", methods=["GET"])
+def stairs_distance():
+
+    t0 = time.time()
 
     # get thread safe db
     db = get_db()
@@ -35,14 +39,16 @@ def goober_value():
     # Check if the request includes a query string parameter named "goober"
     if "distance" in request.args:
         distance = request.args["distance"]
-        db.execute("UPDATE garage SET distance = ?", (distance,))  # overwrites only row
+        distance = float(distance)
+        db.execute("insert into stairs (distance) values(?)", (float(distance),))  # overwrites only row
         db.commit()
 
     # Get the current distance from the database
-    cursor = db.execute("SELECT distance FROM garage")
+    cursor = db.execute("select distance from stairs order by timestamp desc limit 1;")
     value = cursor.fetchone()[0]
 
     # Return the goober value as a JSON response
+    print(f"elapsed: {time.time()-t0}")
     return jsonify({"distance": value})
 
 

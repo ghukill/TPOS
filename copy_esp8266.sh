@@ -1,18 +1,14 @@
 if [ -z "$ESP8266_PORT" ]; then
+    echo "defaults..."
     export ESP8266_PORT="/dev/ttyUSB0" # mac /dev/tty.usbserial-0001
 fi
 
 echo "copy config.json"
 ampy --port $ESP8266_PORT put embedded/config.json
 
-# copy sonar lib
+# copy wifi lib
 echo "copying wifi libs"
 ampy --port $ESP8266_PORT put embedded/wifi.py
-
-# NOTE: current not using
-#echo "copying lib/micropython_ir/ir_rx"
-#ampy --port $ESP8266_PORT put embedded/lib/micropython_ir/ir_rx
-#ampy --port $ESP8266_PORT put embedded/lib/micropython_ir/ir_rx/test.py ir_rx/test.py
 
 # copy sonar lib
 echo "copying sonar libs"
